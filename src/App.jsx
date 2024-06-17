@@ -1,11 +1,23 @@
-import { Button, Container } from "@mui/material"
+import { Button, Container, Typography } from "@mui/material"
+import NavBar from "./navbar/NavBar"
 
 function App() {
   return (
-    <Container>
-      <h1>EduTrack with Material UI</h1>
-      <Button variant="contained">Getting Started</Button>
-    </Container>
+    <>
+      <NavBar />
+      <Container sx={{ mt: 5 }}>
+        <Typography
+          variant="h2"
+          component="h1"
+          m={2}
+          color="secondary"
+          align="center"
+          pb={2}>
+          EduTrack with Material UI
+        </Typography>
+        <Button variant="outlined">Getting Started</Button>
+      </Container>
+    </>
   )
 }
 
