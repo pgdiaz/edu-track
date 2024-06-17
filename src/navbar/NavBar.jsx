@@ -3,14 +3,9 @@ import { AppBar, Box, Button, Drawer, IconButton, Toolbar, Typography } from "@m
 import MenuIcon from "@mui/icons-material/Menu";
 import NavList from "./NavList";
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
-const navLinks = [
-    { title: "Home", path: "#" },
-    { title: "Login", path: "#login" },
-    { title: "Register", path: "#register" },
-];
-
-export default function NavBar() {
+export default function NavBar({ navLinks }) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -23,7 +18,7 @@ export default function NavBar() {
                         edge="start"
                         aria-label="menu"
                         onClick={() => setOpen(true)}
-                        sx={{ display: { xs: "block", sm: "none" } }}
+                        sx={{ display: { xs: "flex", sm: "none" } }}
                     >
                         <MenuIcon />
                     </IconButton>
@@ -33,12 +28,13 @@ export default function NavBar() {
                     >
                         EduTrack
                     </Typography>
-                    <Box sx={{ display: { xs: "none", sm: "block" } }}>
+                    <Box sx={{ display: { xs: "none", sm: "flex" } }}>
                         {navLinks.map((link) => (
                             <Button
                                 key={link.title}
                                 sx={{ color: "#fff" }}
-                                href={link.path}
+                                component={NavLink}
+                                to={link.path}
                             >
                                 {link.title}
                             </Button>

@@ -1,23 +1,31 @@
-import { Button, Container, Typography } from "@mui/material"
+import { Container } from "@mui/material"
 import NavBar from "./navbar/NavBar"
+import { SnackbarProvider } from 'notistack';
+import { Route, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage"
+import RegisterPage from "./pages/RegisterPage"
+
+const navLinks = [
+  { title: "Home", path: "/" },
+  { title: "Login", path: "login" },
+  { title: "Register", path: "register" },
+];
 
 function App() {
   return (
-    <>
-      <NavBar />
+    <SnackbarProvider
+      maxSnack={3}
+      autoHideDuration={2000}>
+      <NavBar navLinks={navLinks} />
       <Container sx={{ mt: 5 }}>
-        <Typography
-          variant="h2"
-          component="h1"
-          m={2}
-          color="secondary"
-          align="center"
-          pb={2}>
-          EduTrack with Material UI
-        </Typography>
-        <Button variant="outlined">Getting Started</Button>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Routes>
       </Container>
-    </>
+    </SnackbarProvider>
   )
 }
 

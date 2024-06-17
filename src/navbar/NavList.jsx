@@ -6,6 +6,7 @@ import {
     ListItemButton,
     ListItemText,
 } from "@mui/material";
+import { NavLink } from "react-router-dom";
 
 export default function NavList({ onClick, navLinks }) {
     return (
@@ -21,8 +22,8 @@ export default function NavList({ onClick, navLinks }) {
                             key={item.title}
                         >
                             <ListItemButton
-                                href={item.path}
-                                component="a"
+                                component={NavLink}
+                                to={item.path}
                             >
                                 <ListItemText primary={item.title} />
                             </ListItemButton>

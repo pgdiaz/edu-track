@@ -9,16 +9,16 @@ import "@fontsource/roboto/700.css";
 import './index.css'
 
 import { CssBaseline, ThemeProvider } from '@mui/material'
-import { SnackbarProvider } from 'notistack';
 import theme from './theme';
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <CssBaseline />
     <ThemeProvider theme={theme}>
-      <SnackbarProvider>
+      <BrowserRouter>
+        <CssBaseline />
         <App />
-      </SnackbarProvider>
+      </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>,
 )
