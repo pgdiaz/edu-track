@@ -5,7 +5,7 @@ import NavList from "./NavList";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-export default function NavBar({ navLinks }) {
+export default function NavBar({ title, navLinks }) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -26,7 +26,7 @@ export default function NavBar({ navLinks }) {
                         variant="h6"
                         sx={{ flexGrow: 1 }}
                     >
-                        EduTrack
+                        {title}
                     </Typography>
                     <Box sx={{ display: { xs: "none", sm: "flex" } }}>
                         {navLinks.map((link) => (

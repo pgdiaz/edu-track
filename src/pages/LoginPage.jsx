@@ -8,7 +8,7 @@ export default function LoginPage() {
     return (
         <>
             <h1>Login</h1>
-            <Box sx={{ display: "grid", gap: "1rem" }}>
+            <Box sx={{ display: "grid", gap: 2 }}>
                 <Alert severity="error">
                     <AlertTitle>Error</AlertTitle>
                     Esta es una alerta

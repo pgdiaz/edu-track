@@ -17,7 +17,7 @@ function App() {
     <SnackbarProvider
       maxSnack={3}
       autoHideDuration={2000}>
-      <NavBar navLinks={navLinks} />
+      <NavBar title="EduTrack" navLinks={navLinks} />
       <Container sx={{ mt: 5 }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
