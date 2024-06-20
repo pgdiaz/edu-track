@@ -2,7 +2,7 @@ import { Container } from "@mui/material"
 import NavBar from "./navbar/NavBar"
 import { SnackbarProvider } from 'notistack';
 import { Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage";
+import CalificacionesPage from "./pages/CalificacionesPage";
 import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
 
@@ -20,7 +20,7 @@ function App() {
       <NavBar title="EduTrack" navLinks={navLinks} />
       <Container sx={{ mt: 5 }}>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<CalificacionesPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Routes>

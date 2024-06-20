@@ -1,10 +1,11 @@
 import { Box, Button, Typography } from "@mui/material";
-import DataTable from "../datagrid/DataTable";
-import { DatableProvider } from "../datagrid/DatableContext";
+import { getAll } from '../api/api';
+import { getColumns } from '../calificaciones/ColumnsDataTable'
+import Datable from "../datagrid/Datable";
 
-export default function HomePage() {
+export default function CalificacionesPage() {
     return (
-        <DatableProvider>
+        <>
             <Box sx={{ display: "grid", gap: 2 }} pb={2}>
                 <Typography
                     variant="h2"
@@ -27,7 +28,7 @@ export default function HomePage() {
                     <Button key="add" variant="outlined">Getting Started</Button>
                 </Box>
             </Box>
-            <DataTable />
-        </DatableProvider>
+            <Datable columns={getColumns} fetchRows={getAll} />
+        </>
     );
 }
