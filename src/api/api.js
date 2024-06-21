@@ -14,41 +14,46 @@ const defaultRows = [
 
 const localStorageKey = 'dataGridRows';
 
-// Función para obtener los datos del localStorage o usar los valores por defecto
+const load = async () => {
+    if (fetchRows().length === 0) {
+        saveRows(defaultRows);
+    }
+}
+
 const fetchRows = () => {
     const storedRows = localStorage.getItem(localStorageKey);
-    return storedRows ? JSON.parse(storedRows) : defaultRows;
+    return JSON.parse(storedRows) || [];
 };
 
-// Función para guardar los datos en el localStorage
 const saveRows = (rows) => {
     localStorage.setItem(localStorageKey, JSON.stringify(rows));
-};
+}
 
-// Simular la carga de datos con paginación
 const get = (page, pageSize) => {
+    page = page ?? 0;
+    pageSize = pageSize ?? 5;
     const rows = fetchRows();
     const paginatedRows = rows.slice(page * pageSize, page * pageSize + pageSize);
     return {
-        rows: paginatedRows,
-        rowCount: rows.length,
+        result: paginatedRows,
+        total: rows.length,
+        page: page,
+        size: pageSize,
     };
-};
+}
 
-// Simular la edición de una fila
-const update = (newRow) => {
+const save = (newRow) => {
     const rows = fetchRows();
-    const updatedRows = rows.map((row) => (row.id === newRow.id ? newRow : row));
+    const updatedRows = rows.some(row => row.id === newRow.id)
+        ? rows.map(row => row.id === newRow.id ? newRow : row)
+        : [newRow, ...rows];
     saveRows(updatedRows);
-};
+}
 
-// Simular la eliminación de una o más filas
 const remove = (selectedIds) => {
     const rows = fetchRows();
     const updatedRows = rows.filter((row) => !selectedIds.includes(row.id));
     saveRows(updatedRows);
 };
 
-const getAll = () => defaultRows;
-
-export { getAll, get, update, remove };
+export { load, get, save, remove };

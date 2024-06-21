@@ -4,19 +4,23 @@ import { DataGrid, GridRowEditStopReasons, GridRowModes } from '@mui/x-data-grid
 import { randomId } from '@mui/x-data-grid-generator';
 import EditToolbar from './EditToolbar';
 import { CancelRowButton, DeleteRowButton, EditRowButton, SaveRowButton } from './ActionsRow';
-import useRows from './DatableReducer';
+import useRows, { ActionType } from './DatableReducer';
 
-export default function Datable({ columns, fetchRows }) {
-    const [rows, stageRow, discardRow, commitRow] = useRows(fetchRows());
+export default function Datable({ columns, fetchRows, onUpdate, onRemove }) {
+    let paginatedResult = fetchRows();
+    const [rows, setRows, actuate] = useRows(paginatedResult.result);
     const [rowModesModel, setRowModesModel] = useState({});
 
     const handleProcessRowUpdate = (newRow) => {
-        commitRow(newRow);
+        actuate(ActionType.Update, newRow);
+        onUpdate(newRow);
+
         return newRow;
     };
 
     const handleDeleteClick = (id) => () => {
-        discardRow(id);
+        actuate(ActionType.Delete, id);
+        onRemove(id);
     };
 
     const handleRowModesModelChange = (newRowModesModel) => {
@@ -36,7 +40,7 @@ export default function Datable({ columns, fetchRows }) {
             ...rowModesModel,
             [id]: { mode: GridRowModes.View, ignoreModifications: true },
         });
-        discardRow(id);
+        actuate(ActionType.Cancel, id );
     };
 
     const updatedColumns = columns().map((column) => {
@@ -68,21 +72,24 @@ export default function Datable({ columns, fetchRows }) {
         }
     };
 
-    // TODO: El ID generado puede generar un conflicto con la base de datos
-    // Nice to have! Experimentar con el concepto de UUID definido por el cliente
     const handleAddClick = () => {
         const row = { id: randomId() };
-        stageRow(row);
+        actuate(ActionType.Create, row);
         setRowModesModel((oldModel) => ({
             ...oldModel,
             [row.id]: { mode: GridRowModes.Edit, fieldToFocus: updatedColumns[0]?.field },
         }));
     };
 
+    const handlePaginationModelChange = (model) => {
+        paginatedResult = fetchRows(model.page, model.pageSize);
+        setRows(paginatedResult.result);
+    }
+
     return (
         <Box
             sx={{
-                height: 500,
+                height: '80%',
                 width: '100%',
                 '& .actions': {
                     color: 'text.secondary',
@@ -96,7 +103,7 @@ export default function Datable({ columns, fetchRows }) {
                 initialState={{
                     pagination: {
                         paginationModel: {
-                            pageSize: 5,
+                            pageSize: paginatedResult.size,
                         },
                     },
                 }}
@@ -115,6 +122,11 @@ export default function Datable({ columns, fetchRows }) {
                     toolbar: { actionName: "Agregar", onAddRow: handleAddClick },
                 }}
                 disableRowSelectionOnClick
+                paginationMode="server"
+                page={paginatedResult.page}
+                pageSize={paginatedResult.size}
+                rowCount={paginatedResult.total}
+                onPaginationModelChange={handlePaginationModelChange}
             />
         </Box>
     );

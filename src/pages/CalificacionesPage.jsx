@@ -1,7 +1,5 @@
-import { Box, Button, Typography } from "@mui/material";
-import { getAll } from '../api/api';
-import { getColumns } from '../calificaciones/ColumnsDataTable'
-import Datable from "../datagrid/Datable";
+import { Box, Typography } from "@mui/material";
+import CalificacionesTable from "../calificaciones/CalificacionesTable";
 
 export default function CalificacionesPage() {
     return (
@@ -16,19 +14,8 @@ export default function CalificacionesPage() {
                     pb={2}>
                     Calificaciones
                 </Typography>
-                <Box
-                    component="span"
-                    sx={
-                        {
-                            display: { xs: "grid", sm: "flex" },
-                            justifyContent: { sm: "flex-end" }
-                        }
-                    }
-                >
-                    <Button key="add" variant="outlined">Getting Started</Button>
-                </Box>
             </Box>
-            <Datable columns={getColumns} fetchRows={getAll} />
+            <CalificacionesTable />
         </>
     );
 }

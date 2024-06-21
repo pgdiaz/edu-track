@@ -1,22 +1,37 @@
 import { useReducer } from 'react';
 
+const ActionType = {
+    Create: "create",
+    Update: "update",
+    Cancel: "cancel",
+    Delete: "delete",
+}
+
+export { ActionType };
+
 function reducer(state, action) {
     switch (action.type) {
-        case 'stage':
+        case ActionType.Create:
             state.stagedRows = state.stagedRows.some(row => row.id === action.payload.id)
                 ? state.stagedRows.map(row => row.id === action.payload.id ? action.payload : row)
                 : [action.payload, ...state.stagedRows]
             break
-        case 'discard':
-            state.stagedRows.some(row => row.id === action.id)
-                ? state.stagedRows = state.stagedRows.filter(row => row.id !== action.id)
-                : state.commitedRows = state.commitedRows.filter(row => row.id !== action.id)
+        case ActionType.Delete:
+            state.stagedRows = state.stagedRows.filter(row => row.id !== action.payload)
+            state.commitedRows = state.commitedRows.filter(row => row.id !== action.payload)
             break
-        default:
+        case ActionType.Update:
             state.commitedRows = state.commitedRows.some(row => row.id === action.payload.id)
                 ? state.commitedRows.map(row => row.id === action.payload.id ? action.payload : row)
                 : [action.payload, ...state.commitedRows]
             state.stagedRows = state.stagedRows.filter(row => row.id !== action.payload.id)
+            break
+        case ActionType.Cancel:
+            state.stagedRows = state.stagedRows.filter(row => row.id !== action.payload)
+            break
+        default:
+            state.stagedRows = []
+            state.commitedRows = action.payload
     }
 
     return {
@@ -31,15 +46,12 @@ export default function useRows(initialRows) {
         commitedRows: initialRows,
         stagedRows: [],
     });
-    const commitRow = (row) => {
-        dispatch({ type: 'commit', payload: row })
+    const setRows = (newRows) => {
+        dispatch({ type: 'reset', payload: newRows })
     }
-    const stageRow = (row) => {
-        dispatch({ type: 'stage', payload: row })
-    }
-    const discardRow = (id) => {
-        dispatch({ type: 'discard', payload: { id: id } })
+    const actuate = (actionType, payload) => {
+        dispatch({ type: actionType, payload: payload })
     }
 
-    return [state.rows, stageRow, discardRow, commitRow];
+    return [state.rows, setRows, actuate];
 }
