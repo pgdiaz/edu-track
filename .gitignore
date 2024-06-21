@@ -33,3 +33,4 @@ ToDoListTasks.json
 
 # Visual Code
 .hintrc
+src/tmp/*
