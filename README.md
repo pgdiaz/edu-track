@@ -1,8 +1,32 @@
-# React + Vite
+# Sistema de Gestión de Alumnos y Calificaciones
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Instalación
 
-Currently, two official plugins are available:
+1. Clona este repositorio en tu máquina local
+   ```console
+   git clone https://github.com/pgdiaz/edu-track.git
+   ```
+2. Verifica que tienes [Node.js](https://nodejs.org/en/download) instalado
+   ```console
+   node -v
+   ```
+3. Instala las dependencias
+   ```console
+   npm install
+   ```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Ejecución
+
+Ejecuta el siguiente comando para iniciar la aplicación en modo de desarrollo:
+   ```console
+   npm run dev
+   ```
+
+Observarás la direccion del servidor que te permitira acceder a la aplicacion:
+```console
+  VITE v5.2.11  ready in 585 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+```
