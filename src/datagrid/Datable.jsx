@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import Box from '@mui/material/Box';
 import { DataGrid, GridRowEditStopReasons, GridRowModes } from '@mui/x-data-grid';
 import { randomId } from '@mui/x-data-grid-generator';
 import EditToolbar from './EditToolbar';
@@ -12,6 +11,9 @@ export default function Datable({ columns, fetchRows, onUpdate, onRemove }) {
     const [rowModesModel, setRowModesModel] = useState({});
 
     const handleProcessRowUpdate = (newRow) => {
+        // TODO: remove logs
+        console.log('### Row Has Changes!!!')
+        console.log(newRow)
         actuate(ActionType.Update, newRow);
         onUpdate(newRow);
 
@@ -24,6 +26,9 @@ export default function Datable({ columns, fetchRows, onUpdate, onRemove }) {
     };
 
     const handleRowModesModelChange = (newRowModesModel) => {
+        // TODO: remove logs
+        console.log('### Models Has Changes!!!')
+        console.log(newRowModesModel)
         setRowModesModel(newRowModesModel);
     };
 
@@ -32,6 +37,10 @@ export default function Datable({ columns, fetchRows, onUpdate, onRemove }) {
     };
 
     const handleSaveClick = (id) => () => {
+        // TODO: remove logs
+        console.log('handleSaveClick for row with id: ' + id)
+        // TODO: Maybe we need validate the row before exit edit mode
+        console.log(rows.find((element) => element.id === id))
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
     };
 
@@ -40,10 +49,10 @@ export default function Datable({ columns, fetchRows, onUpdate, onRemove }) {
             ...rowModesModel,
             [id]: { mode: GridRowModes.View, ignoreModifications: true },
         });
-        actuate(ActionType.Cancel, id );
+        actuate(ActionType.Cancel, id);
     };
 
-    const updatedColumns = columns().map((column) => {
+    const updatedColumns = columns.map((column) => {
         if (column.type === 'actions') {
             return {
                 ...column,
@@ -67,6 +76,9 @@ export default function Datable({ columns, fetchRows, onUpdate, onRemove }) {
     });
 
     const handleRowEditStop = (params, event) => {
+        // TODO: remove logs
+        console.log('### Row Edit Stopped!!!')
+        console.log(params)
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
             event.defaultMuiPrevented = true;
         }
@@ -86,48 +98,45 @@ export default function Datable({ columns, fetchRows, onUpdate, onRemove }) {
         setRows(paginatedResult.result);
     }
 
+    /*
+    const handleProcessRowUpdateError = useCallback((error) => {
+        setSnackbar({ children: error.message, severity: 'error' });
+    }, []);
+    */
+    const handleProcessRowUpdateError = (error) => {
+        console.log(error.message)
+    }
+
     return (
-        <Box
-            sx={{
-                height: '80%',
-                width: '100%',
-                '& .actions': {
-                    color: 'text.secondary',
-                },
-                '& .textPrimary': {
-                    color: 'text.primary',
+        <DataGrid
+            initialState={{
+                pagination: {
+                    paginationModel: {
+                        pageSize: paginatedResult.size,
+                    },
                 },
             }}
-        >
-            <DataGrid
-                initialState={{
-                    pagination: {
-                        paginationModel: {
-                            pageSize: paginatedResult.size,
-                        },
-                    },
-                }}
-                pageSizeOptions={[5, 10]}
-                rows={rows}
-                columns={updatedColumns}
-                editMode="row"
-                rowModesModel={rowModesModel}
-                onRowModesModelChange={handleRowModesModelChange}
-                onRowEditStop={handleRowEditStop}
-                processRowUpdate={handleProcessRowUpdate}
-                slots={{
-                    toolbar: EditToolbar,
-                }}
-                slotProps={{
-                    toolbar: { actionName: "Agregar", onAddRow: handleAddClick },
-                }}
-                disableRowSelectionOnClick
-                paginationMode="server"
-                page={paginatedResult.page}
-                pageSize={paginatedResult.size}
-                rowCount={paginatedResult.total}
-                onPaginationModelChange={handlePaginationModelChange}
-            />
-        </Box>
+            pageSizeOptions={[5, 10]}
+            rows={rows}
+            columns={updatedColumns}
+            editMode="row"
+            rowModesModel={rowModesModel}
+            onRowModesModelChange={handleRowModesModelChange}
+            onRowEditStop={handleRowEditStop}
+            processRowUpdate={handleProcessRowUpdate}
+            slots={{
+                toolbar: EditToolbar,
+            }}
+            slotProps={{
+                toolbar: { actionName: "Agregar", onAddRow: handleAddClick },
+            }}
+            disableRowSelectionOnClick
+            paginationMode="server"
+            page={paginatedResult.page}
+            pageSize={paginatedResult.size}
+            rowCount={paginatedResult.total}
+            onPaginationModelChange={handlePaginationModelChange}
+            onProcessRowUpdateError={handleProcessRowUpdateError}
+        />
     );
 }

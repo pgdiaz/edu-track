@@ -1,15 +1,15 @@
 import { randomId } from "@mui/x-data-grid-generator";
 
 const defaultRows = [
-    { id: randomId(), lastnames: 'Snow', names: 'Jon', signature: null, avg: 14, condition: null },
-    { id: randomId(), lastnames: 'Lannister', names: 'Cersei', signature: null, avg: 31, condition: null },
-    { id: randomId(), lastnames: 'Lannister', names: 'Jaime', signature: null, avg: 31, condition: null },
-    { id: randomId(), lastnames: 'Stark', names: 'Arya', signature: null, avg: 11, condition: null },
-    { id: randomId(), lastnames: 'Targaryen', names: 'Daenerys', signature: null, avg: null, condition: null },
-    { id: randomId(), lastnames: 'Melisandre', names: null, signature: null, avg: 150, condition: null },
-    { id: randomId(), lastnames: 'Clifford', names: 'Ferrara', signature: null, avg: 44, condition: null },
-    { id: randomId(), lastnames: 'Frances', names: 'Rossini', signature: null, avg: 36, condition: null },
-    { id: randomId(), lastnames: 'Roxie', names: 'Harvey', signature: null, avg: 65, condition: null },
+    { id: randomId(), lastnames: 'Snow', names: 'Jon', signature: 'PRAMOV3', firstMidtermNote: 6, secondMidtermNote: 7 },
+    { id: randomId(), lastnames: 'Lannister', names: 'Cersei', signature: 'PRAWEB3', firstMidtermNote: 1, secondMidtermNote: 5 },
+    { id: randomId(), lastnames: 'Lannister', names: 'Jaime', signature: 'PRAWEB3', firstMidtermNote: 7, secondMidtermNote: 3 },
+    { id: randomId(), lastnames: 'Stark', names: 'Arya', signature: 'PRAMOV3', firstMidtermNote: 5, secondMidtermNote: 9 },
+    { id: randomId(), lastnames: 'Targaryen', names: 'Daenerys', signature: 'CEYM', firstMidtermNote: 8, secondMidtermNote: 3 },
+    { id: randomId(), lastnames: 'Melisandre', names: 'Nataly', signature: 'CEYM', firstMidtermNote: 7, secondMidtermNote: 4 },
+    { id: randomId(), lastnames: 'Clifford', names: 'Ferrara', signature: 'PRAMOV3', firstMidtermNote: 0, secondMidtermNote: 10 },
+    { id: randomId(), lastnames: 'Frances', names: 'Rossini', signature: 'PRAWEB3', firstMidtermNote: 5, secondMidtermNote: 5 },
+    { id: randomId(), lastnames: 'Roxie', names: 'Harvey', signature: 'PRAMOV3', firstMidtermNote: 3, secondMidtermNote: 1 },
 ];
 
 const localStorageKey = 'dataGridRows';
