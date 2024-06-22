@@ -3,16 +3,16 @@ import React, { createContext, useState, useContext } from 'react';
 const AuthenticationContext = createContext();
 
 const AuthenticationProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [role, setRole] = useState(null);
     const [status, setStatus] = useState('loggedOut');
 
-    const onLogin = (newUser) => {
-        setUser(newUser);
+    const onLogin = (currentRole) => {
+        setRole(currentRole);
         setStatus('loggedIn');
     };
 
     const logout = () => {
-        setUser(null);
+        setRole(null);
         setStatus('loggedOut');
     };
 
@@ -21,7 +21,7 @@ const AuthenticationProvider = ({ children }) => {
     }
 
     return (
-        <AuthenticationContext.Provider value={{ user, isLoggedIn, onLogin, logout }}>
+        <AuthenticationContext.Provider value={{ role, isLoggedIn, onLogin, logout }}>
             {children}
         </AuthenticationContext.Provider>
     );

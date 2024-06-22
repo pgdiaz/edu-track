@@ -43,7 +43,7 @@ export default function LoginPage() {
             return;
         }
         try {
-            const userId = await login({ email, password });
+            const role = await login({ email, password });
             enqueueSnackbar("Login exitoso", {
                 variant: "success",
                 anchorOrigin: {
@@ -51,7 +51,7 @@ export default function LoginPage() {
                     horizontal: "right",
                 },
             });
-            onLogin(userId);
+            onLogin(role);
             navigate('/');
         } catch (error) {
             enqueueSnackbar(error.message ?? "Ocurrio un error al procesar su solicitud", {
