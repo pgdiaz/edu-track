@@ -20,12 +20,12 @@ const StyledDatable = styled('div')(({ theme }) => ({
         color: theme.palette.mode === 'dark' ? '#ff4343' : '#750f0f',
     },
     '& .app-theme-cell.libre': {
-        backgroundColor: 'rgba(157, 255, 118, 0.49)',
+        backgroundColor: '#d47483',
         color: '#1a3e72',
         fontWeight: '600',
     },
     '& .app-theme-cell.regular': {
-        backgroundColor: '#d47483',
+        backgroundColor: 'rgba(157, 255, 118, 0.49)',
         color: '#1a3e72',
         fontWeight: '600',
     },

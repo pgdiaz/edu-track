@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 const average = (row) => {
-    const average = (row.firstMidtermNote || 0 + row.secondMidtermNote || 0) / 2;
+    const average = ((row.firstMidtermNote || 0) + (row.secondMidtermNote || 0)) / 2;
     return average.toFixed(0);
 };
 
