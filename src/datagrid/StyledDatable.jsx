@@ -30,7 +30,7 @@ const StyledDatable = styled('div')(({ theme }) => ({
         fontWeight: '600',
     },
     '& .app-theme-cell.promocionado': {
-        backgroundColor: 'rgb(184, 231, 251)',
+        backgroundColor: 'rgb(63 163 206)',
         color: '#1a3e72',
         fontWeight: '600',
     },
