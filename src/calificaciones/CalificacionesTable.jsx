@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { get, load, save, remove } from "../api/api";
+import { get, load, save, remove } from "../api/apiCalificaciones";
+import { getAllAlumnos } from "../api/apiAlumnos";
+import { getAllMaterias } from "../api/apiMaterias";
 import Datable from "../datagrid/Datable";
 import { getColumns } from "./ColumnsDataTable";
 import { Box, CircularProgress } from "@mui/material";
@@ -26,28 +28,41 @@ export default function CalificacionesTable() {
     }
 
     const updatedColumns = getColumns().map((column) => {
-        if (column.type === 'number' && column.editable) {
-            return {
-                ...column,
-                renderEditCell: (params) => (
-                    <EditInputCell
-                        {...params}
-                        inputProps={{ min: 0, max: 10 }}
-                    />
-                ),
-                preProcessEditCellProps: (params) => {
-                    let errorMsg = '';
-                    if (params.props.value < 0) {
-                        errorMsg = 'Debe ser mayor o igual a 0';
+        switch (column.field) {
+            case 'firstMidtermNote':
+            case 'secondMidtermNote':
+                return {
+                    ...column,
+                    renderEditCell: (params) => (
+                        <EditInputCell
+                            {...params}
+                            inputProps={{ min: 0, max: 10 }}
+                        />
+                    ),
+                    preProcessEditCellProps: (params) => {
+                        let errorMsg = '';
+                        if (params.props.value < 0) {
+                            errorMsg = 'Debe ser mayor o igual a 0';
+                        }
+                        if (params.props.value > 10) {
+                            errorMsg = 'Debe ser menor o igual a 10';
+                        }
+                        return { ...params.props, error: errorMsg };
                     }
-                    if (params.props.value > 10) {
-                        errorMsg = 'Debe ser menor o igual a 10';
-                    }
-                    return { ...params.props, error: errorMsg };
-                }
-            };
+                };
+            case 'student':
+                return {
+                    ...column,
+                    valueOptions: getAllAlumnos().map((item) => { return { value: item.id, label: `${item.lastnames}, ${item.names}` }; }),
+                };
+            case 'signature':
+                return {
+                    ...column,
+                    valueOptions: getAllMaterias().map((item) => { return { value: item.id, label: item.name } }),
+                };
+            default:
+                return column;
         }
-        return column;
     });
 
     return (

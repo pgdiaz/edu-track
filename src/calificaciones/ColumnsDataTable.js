@@ -13,27 +13,21 @@ const CondicionType = {
 
 const defaultColumns = [
     {
-        field: 'lastnames',
-        headerName: 'Apellidos',
-        width: 150,
+        field: 'student',
+        headerName: 'Alumno',
+        width: 200,
+        type: 'singleSelect',
         hideable: false,
-        editable: false,
-        sortable: true,
-    },
-    {
-        field: 'names',
-        headerName: 'Nombres',
-        width: 150,
-        hideable: true,
-        editable: false,
+        editable: true,
         sortable: false,
     },
     {
         field: 'signature',
         headerName: 'Materia',
         width: 120,
+        type: 'singleSelect',
         hideable: false,
-        editable: false,
+        editable: true,
         sortable: true,
     },
     {

@@ -1,15 +1,15 @@
 import { randomId } from "@mui/x-data-grid-generator";
 
 const defaultRows = [
-    { id: randomId(), lastnames: 'Snow', names: 'Jon', signature: 'PRAMOV3', firstMidtermNote: 6, secondMidtermNote: 7 },
-    { id: randomId(), lastnames: 'Lannister', names: 'Cersei', signature: 'PRAWEB3', firstMidtermNote: 1, secondMidtermNote: 5 },
-    { id: randomId(), lastnames: 'Lannister', names: 'Jaime', signature: 'PRAWEB3', firstMidtermNote: 7, secondMidtermNote: 3 },
-    { id: randomId(), lastnames: 'Stark', names: 'Arya', signature: 'PRAMOV3', firstMidtermNote: 5, secondMidtermNote: 9 },
-    { id: randomId(), lastnames: 'Targaryen', names: 'Daenerys', signature: 'CEYM', firstMidtermNote: 8, secondMidtermNote: 3 },
-    { id: randomId(), lastnames: 'Melisandre', names: 'Nataly', signature: 'CEYM', firstMidtermNote: 7, secondMidtermNote: 4 },
-    { id: randomId(), lastnames: 'Clifford', names: 'Ferrara', signature: 'PRAMOV3', firstMidtermNote: 0, secondMidtermNote: 10 },
-    { id: randomId(), lastnames: 'Frances', names: 'Rossini', signature: 'PRAWEB3', firstMidtermNote: 5, secondMidtermNote: 5 },
-    { id: randomId(), lastnames: 'Roxie', names: 'Harvey', signature: 'PRAMOV3', firstMidtermNote: 3, secondMidtermNote: 1 },
+    { id: randomId(), student: 1, signature: 1, firstMidtermNote: 6, secondMidtermNote: 7 },
+    { id: randomId(), student: 2, signature: 2, firstMidtermNote: 1, secondMidtermNote: 5 },
+    { id: randomId(), student: 3, signature: 2, firstMidtermNote: 7, secondMidtermNote: 3 },
+    { id: randomId(), student: 4, signature: 1, firstMidtermNote: 5, secondMidtermNote: 9 },
+    { id: randomId(), student: 5, signature: 3, firstMidtermNote: 8, secondMidtermNote: 3 },
+    { id: randomId(), student: 6, signature: 3, firstMidtermNote: 7, secondMidtermNote: 4 },
+    { id: randomId(), student: 7, signature: 1, firstMidtermNote: 0, secondMidtermNote: 10 },
+    { id: randomId(), student: 8, signature: 2, firstMidtermNote: 5, secondMidtermNote: 5 },
+    { id: randomId(), student: 9, signature: 1, firstMidtermNote: 3, secondMidtermNote: 1 },
 ];
 
 const localStorageKey = 'dataGridRows';
