@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { login } from "../api/apiUsuarios";
+import { useAuth } from "../security/AuthenticationProvider";
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -13,6 +14,7 @@ export default function LoginPage() {
     });
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
+    const { onLogin } = useAuth();
 
     const emailValidation = () => {
         if (!email.trim()) {
@@ -41,7 +43,7 @@ export default function LoginPage() {
             return;
         }
         try {
-            await login({ email, password });
+            const userId = await login({ email, password });
             enqueueSnackbar("Login exitoso", {
                 variant: "success",
                 anchorOrigin: {
@@ -49,6 +51,7 @@ export default function LoginPage() {
                     horizontal: "right",
                 },
             });
+            onLogin(userId);
             navigate('/');
         } catch (error) {
             enqueueSnackbar(error.message ?? "Ocurrio un error al procesar su solicitud", {

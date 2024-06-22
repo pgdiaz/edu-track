@@ -11,6 +11,14 @@ const CondicionType = {
     Promocionado: "PROMOCIONADO",
 }
 
+const actionsColumn = {
+    field: 'actions',
+    type: 'actions',
+    headerName: 'Acciones',
+    width: 100,
+    cellClassName: 'actions',
+}
+
 const defaultColumns = [
     {
         field: 'student',
@@ -18,7 +26,7 @@ const defaultColumns = [
         width: 200,
         type: 'singleSelect',
         hideable: false,
-        editable: true,
+        editable: false,
         sortable: false,
     },
     {
@@ -27,7 +35,7 @@ const defaultColumns = [
         width: 120,
         type: 'singleSelect',
         hideable: false,
-        editable: true,
+        editable: false,
         sortable: true,
     },
     {
@@ -36,7 +44,7 @@ const defaultColumns = [
         width: 120,
         type: 'number',
         hideable: true,
-        editable: true,
+        editable: false,
         sortable: false,
         valueGetter: (value, row) => {
             return row.firstMidtermNote || 0;
@@ -48,7 +56,7 @@ const defaultColumns = [
         width: 120,
         type: 'number',
         hideable: true,
-        editable: true,
+        editable: false,
         sortable: false,
         valueGetter: (value, row) => {
             return row.secondMidtermNote || 0;
@@ -89,15 +97,8 @@ const defaultColumns = [
             });
         },
     },
-    {
-        field: 'actions',
-        type: 'actions',
-        headerName: 'Acciones',
-        width: 100,
-        cellClassName: 'actions',
-    },
 ];
 
 const getColumns = () => defaultColumns;
 
-export { getColumns, CondicionType };
+export { getColumns, CondicionType, actionsColumn };

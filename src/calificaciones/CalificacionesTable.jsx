@@ -3,13 +3,17 @@ import { get, load, save, remove } from "../api/apiCalificaciones";
 import { getAllAlumnos } from "../api/apiAlumnos";
 import { getAllMaterias } from "../api/apiMaterias";
 import Datable from "../datagrid/Datable";
-import { getColumns } from "./ColumnsDataTable";
+import { getColumns, actionsColumn } from "./ColumnsDataTable";
 import { Box, CircularProgress } from "@mui/material";
 import EditInputCell from "../datagrid/EditInputCell";
 import { StyledDatable } from "../datagrid/StyledDatable";
+import { useAuth } from "../security/AuthenticationProvider";
+import { useSnackbar } from "notistack";
 
 export default function CalificacionesTable() {
     const [dataLoaded, setDataLoaded] = useState(false);
+    const { isLoggedIn } = useAuth();
+    const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
         setTimeout(() => {
@@ -27,12 +31,23 @@ export default function CalificacionesTable() {
         remove(id);
     }
 
+    const handleOnError = (error) => {
+        enqueueSnackbar(error.message ?? "Ocurrio un error al procesar su solicitud", {
+            variant: "error",
+            anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "right",
+            },
+        });
+    }
+
     const updatedColumns = getColumns().map((column) => {
         switch (column.field) {
             case 'firstMidtermNote':
             case 'secondMidtermNote':
                 return {
                     ...column,
+                    editable: isLoggedIn(),
                     renderEditCell: (params) => (
                         <EditInputCell
                             {...params}
@@ -53,11 +68,13 @@ export default function CalificacionesTable() {
             case 'student':
                 return {
                     ...column,
+                    editable: isLoggedIn(),
                     valueOptions: getAllAlumnos().map((item) => { return { value: item.id, label: `${item.lastnames}, ${item.names}` }; }),
                 };
             case 'signature':
                 return {
                     ...column,
+                    editable: isLoggedIn(),
                     valueOptions: getAllMaterias().map((item) => { return { value: item.id, label: item.name } }),
                 };
             default:
@@ -80,13 +97,13 @@ export default function CalificacionesTable() {
                 </Box >
             ) : (
                 <Datable
-                    columns={updatedColumns}
+                    columns={isLoggedIn() ? [...updatedColumns, actionsColumn] : updatedColumns}
                     fetchRows={get}
                     onUpdate={handleOnUpdate}
                     onRemove={handleOnRemove}
+                    onError={handleOnError}
                 />
-            )
-            }
+            )}
         </StyledDatable>
     );
 }

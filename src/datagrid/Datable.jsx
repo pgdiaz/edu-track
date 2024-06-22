@@ -5,15 +5,12 @@ import EditToolbar from './EditToolbar';
 import { CancelRowButton, DeleteRowButton, EditRowButton, SaveRowButton } from './ActionsRow';
 import useRows, { ActionType } from './DatableReducer';
 
-export default function Datable({ columns, fetchRows, onUpdate, onRemove }) {
+export default function Datable({ columns, fetchRows, onUpdate, onRemove, onError }) {
     let paginatedResult = fetchRows();
     const [rows, setRows, actuate] = useRows(paginatedResult.result);
     const [rowModesModel, setRowModesModel] = useState({});
 
     const handleProcessRowUpdate = (newRow) => {
-        // TODO: remove logs
-        console.log('### Row Has Changes!!!')
-        console.log(newRow)
         actuate(ActionType.Update, newRow);
         onUpdate(newRow);
 
@@ -26,9 +23,6 @@ export default function Datable({ columns, fetchRows, onUpdate, onRemove }) {
     };
 
     const handleRowModesModelChange = (newRowModesModel) => {
-        // TODO: remove logs
-        console.log('### Models Has Changes!!!')
-        console.log(newRowModesModel)
         setRowModesModel(newRowModesModel);
     };
 
@@ -37,10 +31,6 @@ export default function Datable({ columns, fetchRows, onUpdate, onRemove }) {
     };
 
     const handleSaveClick = (id) => () => {
-        // TODO: remove logs
-        console.log('handleSaveClick for row with id: ' + id)
-        // TODO: Maybe we need validate the row before exit edit mode
-        console.log(rows.find((element) => element.id === id))
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
     };
 
@@ -76,9 +66,6 @@ export default function Datable({ columns, fetchRows, onUpdate, onRemove }) {
     });
 
     const handleRowEditStop = (params, event) => {
-        // TODO: remove logs
-        console.log('### Row Edit Stopped!!!')
-        console.log(params)
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
             event.defaultMuiPrevented = true;
         }
@@ -98,13 +85,8 @@ export default function Datable({ columns, fetchRows, onUpdate, onRemove }) {
         setRows(paginatedResult.result);
     }
 
-    /*
-    const handleProcessRowUpdateError = useCallback((error) => {
-        setSnackbar({ children: error.message, severity: 'error' });
-    }, []);
-    */
     const handleProcessRowUpdateError = (error) => {
-        console.log(error.message)
+        onError(error);
     }
 
     return (
@@ -128,7 +110,11 @@ export default function Datable({ columns, fetchRows, onUpdate, onRemove }) {
                 toolbar: EditToolbar,
             }}
             slotProps={{
-                toolbar: { actionName: "Agregar", onAddRow: handleAddClick },
+                toolbar: {
+                    enable: updatedColumns.some(column => column.type === 'actions'),
+                    actionName: "Agregar",
+                    onAddRow: handleAddClick
+                },
             }}
             disableRowSelectionOnClick
             paginationMode="server"

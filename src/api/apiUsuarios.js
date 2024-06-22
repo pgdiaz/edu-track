@@ -22,6 +22,7 @@ const login = async (input) => {
     if (!isValid) {
         throw new Error('La contraseña es incorrecta');
     }
+    return user.id;
 }
 
 const register = async (input) => {
