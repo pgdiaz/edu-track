@@ -50,7 +50,7 @@ class UsuariosService {
     static update(id, lastnames, names, email, role, callback) {
         const user = users.find(user => user.id === id);
         if (!user) {
-            callback(null, { affectedRows: 0 })
+            return callback(null, { affectedRows: 0 })
         }
         user.lastnames = lastnames;
         user.names = names;
@@ -59,8 +59,13 @@ class UsuariosService {
         callback(null, { affectedRows: 1 });
     }
 
-    static delete(id) {
-        users = users.filter(user => user.id !== id);
+    static delete(id, callback) {
+        const index = users.findIndex((user) => user.id === id);
+        if (index !== -1) {
+            usuarios.splice(index, 1);
+            return callback(null, { affectedRows: 0 })
+        }
+        callback(null, { affectedRows: 0 })
     };
 
 }

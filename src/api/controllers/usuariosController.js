@@ -67,7 +67,8 @@ class UsuariosController {
     }
 
     static update(req, res) {
-        const { id, lastnames, names, email, role } = req.body;
+        const { id } = req.params;
+        const { lastnames, names, email, role } = req.body;
         if (!id) {
             return res.status(400).send('El id es obligatorio');
         }
@@ -93,6 +94,9 @@ class UsuariosController {
         UsuariosService.delete(id, (err, data) => {
             if (err) {
                 return res.status(500).json({ fecha: new Date().toISOString(), error: err.message });
+            }
+            if (data.affectedRows === 0) {
+                return res.status(404).json({ fecha: new Date().toISOString(), error: 'Usuario no encontrado' });
             }
             res.status(204).json({ message: 'Usuario eleminado con éxito' });
         });
