@@ -20,7 +20,7 @@ class UsuariosService {
                 lastnames: user.lastnames,
                 names: user.names,
                 email: user.email,
-                role: user.role || 'guest',
+                role: user.role,
             }));
         callback(null, {
             result: paginatedRows,
@@ -34,14 +34,14 @@ class UsuariosService {
         callback(null, users.find(user => user.email === email));
     }
 
-    static save(lastnames, names, email, password, callback) {
+    static save(id, lastnames, names, email, password, role, callback) {
         const user = {
-            id: randomId(),
+            id: id ?? randomId(),
             lastnames: lastnames,
             names: names,
             email: email,
             password: password,
-            role: null,
+            role: role || 'guest',
         };
         users.unshift(user);
         callback(null, user);
@@ -62,8 +62,8 @@ class UsuariosService {
     static delete(id, callback) {
         const index = users.findIndex((user) => user.id === id);
         if (index !== -1) {
-            usuarios.splice(index, 1);
-            return callback(null, { affectedRows: 0 })
+            users.splice(index, 1);
+            return callback(null, { affectedRows: 1 })
         }
         callback(null, { affectedRows: 0 })
     };

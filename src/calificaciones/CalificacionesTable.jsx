@@ -20,8 +20,14 @@ export default function CalificacionesTable() {
             load().then(() => {
                 setDataLoaded(true);
             });
-        }, 3000);
+        }, 500);
     }, []);
+
+    const handleFetchRows = async (page, pageSize) => {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        const response = await get(page, pageSize);
+        return response;
+    }
 
     const handleOnUpdate = (row) => {
         save(row);
@@ -84,7 +90,16 @@ export default function CalificacionesTable() {
 
     return (
         <StyledDatable>
-            {!dataLoaded ? (
+            {dataLoaded ? (
+                <Datable
+                    columns={isLoggedIn() ? [...updatedColumns, actionsColumn] : updatedColumns}
+                    fetchRows={handleFetchRows}
+                    onCreate={handleOnUpdate}
+                    onUpdate={handleOnUpdate}
+                    onRemove={handleOnRemove}
+                    onError={handleOnError}
+                />
+            ) : (
                 <Box style={{ position: 'relative' }}>
                     <CircularProgress
                         color="secondary"
@@ -95,14 +110,6 @@ export default function CalificacionesTable() {
                         style={{ marginLeft: '48%', marginTop: '10%' }}
                     />
                 </Box >
-            ) : (
-                <Datable
-                    columns={isLoggedIn() ? [...updatedColumns, actionsColumn] : updatedColumns}
-                    fetchRows={get}
-                    onUpdate={handleOnUpdate}
-                    onRemove={handleOnRemove}
-                    onError={handleOnError}
-                />
             )}
         </StyledDatable>
     );

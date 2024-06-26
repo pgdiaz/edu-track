@@ -2,8 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { login } from "../api/apiUsuarios";
 import { useAuth } from "../security/AuthenticationProvider";
+import axios from "axios";
+
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -43,7 +45,14 @@ export default function LoginPage() {
             return;
         }
         try {
-            const role = await login({ email, password });
+            await axios.post(`${apiBaseUrl}/usuarios/login`, { email, password })
+                .then(response => {
+                    onLogin(response.data.role);
+                })
+                .catch(error => {
+                    console.log(error);
+                    throw new Error('Ocurrió un error recuperando los datos de su solicitud');
+                });
             enqueueSnackbar("Login exitoso", {
                 variant: "success",
                 anchorOrigin: {
@@ -51,7 +60,6 @@ export default function LoginPage() {
                     horizontal: "right",
                 },
             });
-            onLogin(role);
             navigate('/');
         } catch (error) {
             enqueueSnackbar(error.message ?? "Ocurrio un error al procesar su solicitud", {

@@ -1,18 +1,41 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DataGrid, GridRowEditStopReasons, GridRowModes } from '@mui/x-data-grid';
 import { randomId } from '@mui/x-data-grid-generator';
-import EditToolbar from './EditToolbar';
+import { LinearProgress } from '@mui/material';
 import { CancelRowButton, DeleteRowButton, EditRowButton, SaveRowButton } from './ActionsRow';
 import useRows, { ActionType } from './DatableReducer';
+import EditToolbar from './EditToolbar';
+import OverlayRows from './OverlayRows';
 
-export default function Datable({ columns, fetchRows, onUpdate, onRemove, onError }) {
-    let paginatedResult = fetchRows();
-    const [rows, setRows, actuate] = useRows(paginatedResult.result);
+export default function Datable({ columns, fetchRows, onCreate, onUpdate, onRemove, onError }) {
+    const [rows, setRows, actuate] = useRows([]);
     const [rowModesModel, setRowModesModel] = useState({});
+    const [dataLoaded, setDataLoaded] = useState(false);
+    const [rowCount, setRowCount] = useState(0);
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(5);
+
+    useEffect(() => {
+        setDataLoaded(false);
+        const fetchData = async () => {
+            try {
+                const data = await fetchRows(page, pageSize);
+                if (data) {
+                    setRows(data.result);
+                    setRowCount(data.total);
+                }
+                setDataLoaded(true);
+            } catch (error) {
+                onError(error);
+            }
+        }
+        fetchData();
+    }, [page, pageSize]);
 
     const handleProcessRowUpdate = (newRow) => {
         actuate(ActionType.Update, newRow);
-        onUpdate(newRow);
+        newRow.isNew ? onCreate(newRow) : onUpdate(newRow);
+        newRow.isNew = false;
 
         return newRow;
     };
@@ -72,17 +95,17 @@ export default function Datable({ columns, fetchRows, onUpdate, onRemove, onErro
     };
 
     const handleAddClick = () => {
-        const row = { id: randomId() };
+        const row = { id: randomId(), isNew: true };
         actuate(ActionType.Create, row);
         setRowModesModel((oldModel) => ({
             ...oldModel,
-            [row.id]: { mode: GridRowModes.Edit, fieldToFocus: updatedColumns[0]?.field },
+            [row.id]: { mode: GridRowModes.Edit, fieldToFocus: columns[0]?.field },
         }));
     };
 
     const handlePaginationModelChange = (model) => {
-        paginatedResult = fetchRows(model.page, model.pageSize);
-        setRows(paginatedResult.result);
+        setPage(model.page);
+        setPageSize(model.pageSize);
     }
 
     const handleProcessRowUpdateError = (error) => {
@@ -94,7 +117,7 @@ export default function Datable({ columns, fetchRows, onUpdate, onRemove, onErro
             initialState={{
                 pagination: {
                     paginationModel: {
-                        pageSize: paginatedResult.size,
+                        pageSize: pageSize,
                     },
                 },
             }}
@@ -106,8 +129,11 @@ export default function Datable({ columns, fetchRows, onUpdate, onRemove, onErro
             onRowModesModelChange={handleRowModesModelChange}
             onRowEditStop={handleRowEditStop}
             processRowUpdate={handleProcessRowUpdate}
+            loading={!dataLoaded}
             slots={{
                 toolbar: EditToolbar,
+                loadingOverlay: LinearProgress,
+                noRowsOverlay: OverlayRows,
             }}
             slotProps={{
                 toolbar: {
@@ -115,12 +141,13 @@ export default function Datable({ columns, fetchRows, onUpdate, onRemove, onErro
                     actionName: "Agregar",
                     onAddRow: handleAddClick
                 },
+                loadingOverlay: { color: "secondary" },
             }}
             disableRowSelectionOnClick
             paginationMode="server"
-            page={paginatedResult.page}
-            pageSize={paginatedResult.size}
-            rowCount={paginatedResult.total}
+            page={page}
+            pageSize={pageSize}
+            rowCount={rowCount}
             onPaginationModelChange={handlePaginationModelChange}
             onProcessRowUpdateError={handleProcessRowUpdateError}
         />

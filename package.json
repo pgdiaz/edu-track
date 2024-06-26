@@ -1,10 +1,10 @@
 {
   "name": "edu-track",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "scripts": {
-    "dev": "npm-run-all --parallel vite api",
+    "dev": "npm-run-all --parallel vite",
     "vite": "vite",
     "api": "nodemon src/api/app.js",
     "build": "vite build",
@@ -19,6 +19,7 @@
     "@mui/material": "^5.15.20",
     "@mui/x-data-grid": "^7.7.0",
     "@mui/x-data-grid-generator": "^7.7.0",
+    "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

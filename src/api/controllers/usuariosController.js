@@ -23,15 +23,15 @@ class UsuariosController {
             if (err) {
                 return res.status(500).json({ fecha: new Date().toISOString(), error: err.message });
             }
-            if (data.user) {
+            if (data) {
                 return res.status(400).json({ fecha: new Date().toISOString(), error: 'El correo electrónico ya está registrado' });
             }
             const hashedPassword = await bcrypt.hash(password, 10);
-            UsuariosService.save(lastnames, names, email, hashedPassword, (err, data) => {
+            UsuariosService.save(null, lastnames, names, email, hashedPassword, null, (err, data) => {
                 if (err) {
                     return res.status(500).json({ fecha: new Date().toISOString(), error: err.message });
                 }
-                res.send({
+                res.status(201).send({
                     id: data.id,
                     lastnames: data.lastnames,
                     names: data.names,
@@ -50,18 +50,18 @@ class UsuariosController {
             if (err) {
                 return res.status(500).json({ fecha: new Date().toISOString(), error: err.message });
             }
-            if (!data.user) {
+            if (!data) {
                 return res.status(400).json({ fecha: new Date().toISOString(), error: 'El correo electrónico no está registrado' });
             }
-            const isValid = await bcrypt.compare(password, data.user.password);
+            const isValid = await bcrypt.compare(password, data.password);
             if (!isValid) {
                 return res.status(400).json({ fecha: new Date().toISOString(), error: 'La contraseña es incorrecta' });
             }
-            res.send({
-                id: data.user.id,
-                lastnames: data.user.lastnames,
-                names: data.user.names,
-                role: data.user.role || 'guest'
+            res.status(201).send({
+                id: data.id,
+                lastnames: data.lastnames,
+                names: data.names,
+                role: data.role || 'guest'
             });
         });
     }
@@ -87,7 +87,7 @@ class UsuariosController {
     }
 
     static delete(req, res) {
-        const id = parseInt(req.params.id);
+        const { id } = req.params;
         if (!id) {
             return res.status(400).send('El id es obligatorio');
         }
@@ -99,6 +99,32 @@ class UsuariosController {
                 return res.status(404).json({ fecha: new Date().toISOString(), error: 'Usuario no encontrado' });
             }
             res.status(204).json({ message: 'Usuario eleminado con éxito' });
+        });
+    }
+
+    static create(req, res) {
+        const { id, lastnames, names, email, role } = req.body;
+        if (!email) {
+            return res.status(400).send('El correo electrónico es obligatorio');
+        }
+        UsuariosService.getBy(email, async (err, data) => {
+            if (err) {
+                return res.status(500).json({ fecha: new Date().toISOString(), error: err.message });
+            }
+            if (data) {
+                return res.status(400).json({ fecha: new Date().toISOString(), error: 'El correo electrónico ya está registrado' });
+            }
+            UsuariosService.save(id, lastnames, names, email, null, role, (err, data) => {
+                if (err) {
+                    return res.status(500).json({ fecha: new Date().toISOString(), error: err.message });
+                }
+                res.status(201).send({
+                    id: data.id,
+                    lastnames: data.lastnames,
+                    names: data.names,
+                    email: data.email,
+                });
+            });
         });
     }
 

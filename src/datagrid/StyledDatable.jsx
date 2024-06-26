@@ -4,10 +4,12 @@ import { styled } from "@mui/material";
     TODO: Los estilos customizados por logica de negocio: libre, regular, promocionado;
     deberian definirse en otro componente de estilos en el paquete de calificaciones y
     proporcionarlos a este componente por propiedades, ya que este componente de estilo
-    se abstrae de las definiciones de negocio
+    se abstrae de las definiciones de negocio.
+    La altura deberia adaptarse al contenido y no estar fija en 400
+    https://mui.com/x/react-data-grid/column-visibility/
 */
 const StyledDatable = styled('div')(({ theme }) => ({
-    height: '80%',
+    height: 400,
     width: '100%',
     '& .actions': {
         color: 'text.secondary',

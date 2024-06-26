@@ -29,7 +29,7 @@ const saveRows = (rows) => {
     localStorage.setItem(localStorageKey, JSON.stringify(rows));
 }
 
-const get = (page, pageSize) => {
+const get = async (page, pageSize) => {
     page = page ?? 0;
     pageSize = pageSize ?? 5;
     const rows = fetchRows();

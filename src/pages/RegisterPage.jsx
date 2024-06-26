@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
-import { register } from "../api/apiUsuarios";
+import axios from "axios";
+
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export default function RegisterPage() {
     const [lastnames, setLastnames] = useState("");
@@ -63,7 +65,7 @@ export default function RegisterPage() {
             return;
         }
         try {
-            await register({ lastnames, names, email, password });
+            await axios.post(`${apiBaseUrl}/usuarios/register`, { lastnames, names, email, password })
             enqueueSnackbar("Su solicitud fue enviada", {
                 variant: "success",
                 anchorOrigin: {
