@@ -5,7 +5,7 @@ class UsuariosController {
 
     static getAllBy(req, res) {
         const page = parseInt(req.query.page) || 0;
-        const size = parseInt(req.query.size) || 5;
+        const size = parseInt(req.query.pageSize) || 5;
         UsuariosRepository.getAllBy(page, size, (err, data) => {
             if (err) {
                 return res.status(500).json({ fecha: new Date().toISOString(), error: err.message });
