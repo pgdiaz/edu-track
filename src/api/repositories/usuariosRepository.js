@@ -1,71 +1,74 @@
-import crypto from 'node:crypto'
-
-const users = [
-    {
-        id: crypto.randomUUID(),
-        lastnames: 'Diaz',
-        names: 'Pablo',
-        email: 'admin@gmail.com',
-        password: '$2a$10$vG6S8I0RayeOjQo/YNbkGuY.JK0TC2utVdOmRRULfRq9/7h2KaE6S',
-        role: 'admin'
-    },
-];
+import db from '../configs/dbConfig.js'
 
 class UsuariosRepository {
 
     static getAllBy(page, size, callback) {
-        const paginatedRows = users.slice(page * size, page * size + size)
-            .map(user => ({
-                id: user.id,
-                lastnames: user.lastnames,
-                names: user.names,
-                email: user.email,
-                role: user.role,
-            }));
-        callback(null, {
-            result: paginatedRows,
-            total: users.length,
-            page: page,
-            size: size,
+        const offset = Math.max(0, (page - 1) * size);
+        const query = 'SELECT SQL_CALC_FOUND_ROWS BIN_TO_UUID(id) as id, lastnames, names, email, role, status FROM usuarios LIMIT ? OFFSET ?';
+        db.query(query, [size, offset], (err, results) => {
+            if (err) return callback(err, null);
+            db.query('SELECT FOUND_ROWS() as total', (err, totalResults) => {
+                if (err) return callback(err, null);
+                const total = totalResults[0].total;
+                callback(null, {
+                    result: results,
+                    total: total,
+                    page: page,
+                    size: size
+                });
+            });
         });
     }
 
     static getBy(email, callback) {
-        callback(null, users.find(user => user.email === email));
+        const query = 'SELECT BIN_TO_UUID(id) as id, lastnames, names, email, password, role, status FROM usuarios WHERE email = ?';
+        db.query(query, [email], (err, results) => {
+            if (err) return callback(err);
+            callback(null, results[0]);
+        });
     }
 
-    static save(id, lastnames, names, email, password, role, callback) {
-        const user = {
-            id: id ?? crypto.randomUUID(),
-            lastnames: lastnames,
-            names: names,
-            email: email,
-            password: password,
-            role: role || 'guest',
-        };
-        users.unshift(user);
-        callback(null, user);
+    static existsBy(email, callback) {
+        const query = 'SELECT 1 FROM usuarios WHERE email = ? LIMIT 1';
+        db.query(query, [email], (err, results) => {
+            if (err) return callback(err);
+            const exists = results.length > 0;
+            callback(null, exists);
+        });
+    }
+
+    static insert(id, lastnames, names, email, password, role, callback) {
+        const userId = id ? `UUID_TO_BIN('${id}')` : 'UUID_TO_BIN(UUID())';
+        const query = `
+            INSERT INTO usuarios (id, lastnames, names, email, password, role, status)
+            VALUES (${userId}, ?, ?, ?, ?, ?, 'activo')
+        `;
+        db.query(query, [lastnames, names, email, password, role ?? 'guest'], (err, results) => {
+            if (err) return callback(err);
+            callback(null, { affectedRows: results.affectedRows });
+        });
     }
 
     static update(id, lastnames, names, email, role, callback) {
-        const user = users.find(user => user.id === id);
-        if (!user) {
-            return callback(null, { affectedRows: 0 })
-        }
-        user.lastnames = lastnames;
-        user.names = names;
-        user.email = email;
-        user.role = role;
-        callback(null, { affectedRows: 1 });
+        const query = `
+            UPDATE usuarios
+            SET lastnames = ?, names = ?, email = ?, role = ?
+            WHERE id = UUID_TO_BIN(?)
+        `;
+        db.query(query, [lastnames, names, email, role, id], (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, { affectedRows: results.affectedRows });
+        });
     }
 
     static delete(id, callback) {
-        const index = users.findIndex((user) => user.id === id);
-        if (index !== -1) {
-            users.splice(index, 1);
-            return callback(null, { affectedRows: 1 })
-        }
-        callback(null, { affectedRows: 0 })
+        const query = 'DELETE FROM usuarios WHERE id = UUID_TO_BIN(?)';
+        db.query(query, [id], (err, result) => {
+            if (err) return callback(err);
+            callback(null, { affectedRows: result.affectedRows });
+        });
     }
 
 }

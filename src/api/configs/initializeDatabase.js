@@ -8,11 +8,11 @@ const dbName = process.env.DB_NAME || 'edutrack';
 
 const createTableQuery = `
 CREATE TABLE IF NOT EXISTS usuarios (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
     lastnames VARCHAR(255) NOT NULL,
     names VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(255),
     role VARCHAR(50) NOT NULL,
     status VARCHAR(50) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     deleted_at DATETIME DEFAULT NULL
 )
 `;
+
 const insertAdminQuery = `
 INSERT INTO usuarios (lastnames, names, email, password, role, status)
 VALUES ('Diaz', 'Pablo', 'admin@gmail.com', '$2a$10$vG6S8I0RayeOjQo/YNbkGuY.JK0TC2utVdOmRRULfRq9/7h2KaE6S', 'admin', 'activo')
@@ -41,7 +42,7 @@ const initializeDatabase = () => {
                     if (err) {
                         return reject(err);
                     }
-                    console.log('Table Usuarios created or already exists');
+                    console.log('Table usuarios created or already exists');
                     db.query(insertAdminQuery, (err, results) => {
                         if (err) {
                             return reject(err);

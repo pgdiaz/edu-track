@@ -1,15 +1,15 @@
-import crypto from 'node:crypto'
+import { v4 as uuidv4 } from 'uuid';
 
 const defaultRows = [
-    { id: crypto.randomUUID(), student: 1, signature: 1, firstMidtermNote: 6, secondMidtermNote: 7 },
-    { id: crypto.randomUUID(), student: 2, signature: 2, firstMidtermNote: 1, secondMidtermNote: 5 },
-    { id: crypto.randomUUID(), student: 3, signature: 2, firstMidtermNote: 7, secondMidtermNote: 3 },
-    { id: crypto.randomUUID(), student: 4, signature: 1, firstMidtermNote: 5, secondMidtermNote: 9 },
-    { id: crypto.randomUUID(), student: 5, signature: 3, firstMidtermNote: 8, secondMidtermNote: 3 },
-    { id: crypto.randomUUID(), student: 6, signature: 3, firstMidtermNote: 7, secondMidtermNote: 4 },
-    { id: crypto.randomUUID(), student: 7, signature: 1, firstMidtermNote: 0, secondMidtermNote: 10 },
-    { id: crypto.randomUUID(), student: 8, signature: 2, firstMidtermNote: 5, secondMidtermNote: 5 },
-    { id: crypto.randomUUID(), student: 9, signature: 1, firstMidtermNote: 3, secondMidtermNote: 1 },
+    { id: uuidv4(), student: 1, signature: 1, firstMidtermNote: 6, secondMidtermNote: 7 },
+    { id: uuidv4(), student: 2, signature: 2, firstMidtermNote: 1, secondMidtermNote: 5 },
+    { id: uuidv4(), student: 3, signature: 2, firstMidtermNote: 7, secondMidtermNote: 3 },
+    { id: uuidv4(), student: 4, signature: 1, firstMidtermNote: 5, secondMidtermNote: 9 },
+    { id: uuidv4(), student: 5, signature: 3, firstMidtermNote: 8, secondMidtermNote: 3 },
+    { id: uuidv4(), student: 6, signature: 3, firstMidtermNote: 7, secondMidtermNote: 4 },
+    { id: uuidv4(), student: 7, signature: 1, firstMidtermNote: 0, secondMidtermNote: 10 },
+    { id: uuidv4(), student: 8, signature: 2, firstMidtermNote: 5, secondMidtermNote: 5 },
+    { id: uuidv4(), student: 9, signature: 1, firstMidtermNote: 3, secondMidtermNote: 1 },
 ];
 
 const localStorageKey = 'dataGridRows';

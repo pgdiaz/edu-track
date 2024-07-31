@@ -4,9 +4,10 @@
   "version": "0.4.0",
   "type": "module",
   "scripts": {
-    "dev": "npm-run-all --parallel vite",
-    "vite": "vite",
-    "api": "nodemon src/api/app.js",
+    "dev": "npm-run-all --parallel app api",
+    "app": "vite",
+    "api": "node src/api/app.js",
+    "napi": "nodemon src/api/app.js",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -27,7 +28,8 @@
     "notistack": "3.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-router-dom": "6.23.1"
+    "react-router-dom": "6.23.1",
+    "uuid": "10.0.0"
   },
   "devDependencies": {
     "@types/react": "18.2.66",

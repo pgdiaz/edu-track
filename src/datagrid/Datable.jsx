@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { DataGrid, GridRowEditStopReasons, GridRowModes } from '@mui/x-data-grid';
-import crypto from 'node:crypto';
+import { v4 as uuidv4 } from 'uuid';
 import { LinearProgress } from '@mui/material';
 import { CancelRowButton, DeleteRowButton, EditRowButton, SaveRowButton } from './ActionsRow';
 import useRows, { ActionType } from './DatableReducer';
@@ -95,7 +95,7 @@ export default function Datable({ columns, fetchRows, onCreate, onUpdate, onRemo
     };
 
     const handleAddClick = () => {
-        const row = { id: crypto.randomUUID()(), isNew: true };
+        const row = { id: uuidv4(), isNew: true };
         actuate(ActionType.Create, row);
         setRowModesModel((oldModel) => ({
             ...oldModel,
