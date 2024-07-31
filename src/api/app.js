@@ -12,7 +12,8 @@ app.get('/api/v1/status', async (req, res) => {
     res.status(200).send("UP");
 });
 
-const port = process.env.PORT || 3040;
-app.listen(port, () => {
-    console.log(`Servidor en ejecución en el puerto ${port}`);
+// eslint-disable-next-line no-undef
+const port = process.env.PORT ?? 0
+const server = app.listen(port, () => {
+    console.log(`Servidor en ejecución en el puerto http://localhost:${server.address().port}/api/v1/status`);
 });
