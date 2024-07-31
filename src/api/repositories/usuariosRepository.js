@@ -4,7 +4,7 @@ class UsuariosRepository {
 
     static getAllBy(page, size, callback) {
         const offset = Math.max(0, (page - 1) * size);
-        const query = 'SELECT SQL_CALC_FOUND_ROWS BIN_TO_UUID(id) as id, lastnames, names, email, role, status FROM usuarios LIMIT ? OFFSET ?';
+        const query = 'SELECT SQL_CALC_FOUND_ROWS BIN_TO_UUID(id) as id, lastnames, names, email, role, status FROM usuarios WHERE deleted_at IS NULL LIMIT ? OFFSET ?';
         db.query(query, [size, offset], (err, results) => {
             if (err) return callback(err, null);
             db.query('SELECT FOUND_ROWS() as total', (err, totalResults) => {
@@ -21,7 +21,7 @@ class UsuariosRepository {
     }
 
     static getBy(email, callback) {
-        const query = 'SELECT BIN_TO_UUID(id) as id, lastnames, names, email, password, role, status FROM usuarios WHERE email = ?';
+        const query = 'SELECT BIN_TO_UUID(id) as id, lastnames, names, email, password, role, status FROM usuarios WHERE email = ? AND deleted_at IS NULL';
         db.query(query, [email], (err, results) => {
             if (err) return callback(err);
             callback(null, results[0]);
@@ -29,7 +29,7 @@ class UsuariosRepository {
     }
 
     static existsBy(email, callback) {
-        const query = 'SELECT 1 FROM usuarios WHERE email = ? LIMIT 1';
+        const query = 'SELECT 1 FROM usuarios WHERE email = ? AND deleted_at IS NULL LIMIT 1';
         db.query(query, [email], (err, results) => {
             if (err) return callback(err);
             const exists = results.length > 0;
@@ -53,7 +53,7 @@ class UsuariosRepository {
         const query = `
             UPDATE usuarios
             SET lastnames = ?, names = ?, email = ?, role = ?
-            WHERE id = UUID_TO_BIN(?)
+            WHERE id = UUID_TO_BIN(?) AND deleted_at IS NULL
         `;
         db.query(query, [lastnames, names, email, role, id], (err, results) => {
             if (err) {
@@ -64,7 +64,11 @@ class UsuariosRepository {
     }
 
     static delete(id, callback) {
-        const query = 'DELETE FROM usuarios WHERE id = UUID_TO_BIN(?)';
+        const query = `
+            UPDATE usuarios
+            SET deleted_at = NOW()
+            WHERE id = UUID_TO_BIN(?) AND deleted_at IS NULL
+        `;
         db.query(query, [id], (err, result) => {
             if (err) return callback(err);
             callback(null, { affectedRows: result.affectedRows });

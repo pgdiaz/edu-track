@@ -6,18 +6,19 @@ dotenv.config();
 
 const dbName = process.env.DB_NAME || 'edutrack';
 
-const createTableQuery = `
+const createUsuariosTableQuery = `
 CREATE TABLE IF NOT EXISTS usuarios (
     id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
     lastnames VARCHAR(255) NOT NULL,
     names VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL,
     password VARCHAR(255),
     role VARCHAR(50) NOT NULL,
     status VARCHAR(50) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    deleted_at DATETIME DEFAULT NULL
+    deleted_at DATETIME DEFAULT NULL,
+    UNIQUE (email, deleted_at)
 )
 `;
 
@@ -30,23 +31,15 @@ ON DUPLICATE KEY UPDATE email=email
 const initializeDatabase = () => {
     return new Promise((resolve, reject) => {
         db.query(`CREATE DATABASE IF NOT EXISTS ${dbName}`, (err) => {
-            if (err) {
-                return reject(err);
-            }
+            if (err) return reject(err);
             console.log(`Database ${dbName} created or already exists`);
             db.changeUser({ database: dbName }, (err) => {
-                if (err) {
-                    return reject(err);
-                }
-                db.query(createTableQuery, (err) => {
-                    if (err) {
-                        return reject(err);
-                    }
+                if (err) return reject(err);
+                db.query(createUsuariosTableQuery, (err) => {
+                    if (err) return reject(err);
                     console.log('Table usuarios created or already exists');
                     db.query(insertAdminQuery, (err, results) => {
-                        if (err) {
-                            return reject(err);
-                        }
+                        if (err) return reject(err);
                         console.log('Default admin user inserted or already exists');
                         resolve(results);
                     });
