@@ -3,7 +3,8 @@ import db from '../configs/dbConfig.js'
 class UsuariosRepository {
 
     static getAllBy(page, size, callback) {
-        const offset = Math.max(0, (page - 1) * size);
+        const currentPage = Math.max(0, page);
+        const offset = currentPage * size;
         const query = 'SELECT SQL_CALC_FOUND_ROWS BIN_TO_UUID(id) as id, lastnames, names, email, role, status FROM usuarios WHERE deleted_at IS NULL LIMIT ? OFFSET ?';
         db.query(query, [size, offset], (err, results) => {
             if (err) return callback(err, null);
@@ -66,7 +67,7 @@ class UsuariosRepository {
     static delete(id, callback) {
         const query = `
             UPDATE usuarios
-            SET deleted_at = NOW()
+            SET deleted_at = NOW(), status = 'deleted'
             WHERE id = UUID_TO_BIN(?) AND deleted_at IS NULL
         `;
         db.query(query, [id], (err, result) => {

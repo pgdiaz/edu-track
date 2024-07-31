@@ -1,4 +1,4 @@
-const roles = ['admin', 'docente', 'guest'];
+const roles = ['admin', 'docente', 'alumno', 'guest'];
 
 const defaultColumns = [
     {
