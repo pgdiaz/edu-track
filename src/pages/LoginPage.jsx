@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { Box, Button, Container, TextField, Typography, Link } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useAuth } from "../security/AuthenticationProvider";
 import axios from "axios";
@@ -17,6 +17,10 @@ export default function LoginPage() {
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     const { onLogin } = useAuth();
+
+    const handleForgotPassword = () => {
+        navigate('/reset-password');
+    };
 
     const emailValidation = () => {
         if (!email.trim()) {
@@ -124,6 +128,9 @@ export default function LoginPage() {
                     >
                         Iniciar Sesión
                     </Button>
+                    <Link component="button" variant="body2" onClick={handleForgotPassword}>
+                        ¿Olvidaste tu contraseña o sos un usuario nuevo?
+                    </Link>
                 </Box>
             </Box>
         </Container>

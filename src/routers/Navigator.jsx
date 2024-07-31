@@ -8,6 +8,7 @@ import { useAuth } from "../security/AuthenticationProvider";
 import LogoutPage from "../pages/LogoutPage";
 import PrivateRoute from "./PrivateRoute";
 import AdminPanelPage from "../pages/AdminPanelPage";
+import ResetPage from "../pages/ResetPage"
 
 const outNavLinks = [
     { title: "Home", path: "/" },
@@ -49,6 +50,7 @@ const Navigator = () => {
                     <Route path="/register" element={<RegisterPage />} />
                     <Route path="/logout" element={<LogoutPage />} />
                     <Route path="/panel" element={wrapPrivateRoute(<AdminPanelPage />, isAuthorized)} />
+                    <Route path="/reset-password" element={<ResetPage />} />
                 </Routes>
             </Container>
         </>
