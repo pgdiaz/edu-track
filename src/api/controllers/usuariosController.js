@@ -1,4 +1,4 @@
-import UsuariosService from '../services/usuariosService.js';
+import UsuariosRepository from '../repositories/usuariosRepository.js'
 import bcrypt from 'bcryptjs';
 
 class UsuariosController {
@@ -6,7 +6,7 @@ class UsuariosController {
     static getAllBy(req, res) {
         const page = parseInt(req.query.page) || 0;
         const size = parseInt(req.query.size) || 5;
-        UsuariosService.getAllBy(page, size, (err, data) => {
+        UsuariosRepository.getAllBy(page, size, (err, data) => {
             if (err) {
                 return res.status(500).json({ fecha: new Date().toISOString(), error: err.message });
             }
@@ -19,7 +19,7 @@ class UsuariosController {
         if (!email || !password) {
             return res.status(400).send('El correo electrónico y la contraseña son obligatorios');
         }
-        UsuariosService.getBy(email, async (err, data) => {
+        UsuariosRepository.getBy(email, async (err, data) => {
             if (err) {
                 return res.status(500).json({ fecha: new Date().toISOString(), error: err.message });
             }
@@ -27,7 +27,7 @@ class UsuariosController {
                 return res.status(400).json({ fecha: new Date().toISOString(), error: 'El correo electrónico ya está registrado' });
             }
             const hashedPassword = await bcrypt.hash(password, 10);
-            UsuariosService.save(null, lastnames, names, email, hashedPassword, null, (err, data) => {
+            UsuariosRepository.save(null, lastnames, names, email, hashedPassword, null, (err, data) => {
                 if (err) {
                     return res.status(500).json({ fecha: new Date().toISOString(), error: err.message });
                 }
@@ -46,7 +46,7 @@ class UsuariosController {
         if (!email || !password) {
             return res.status(400).send('El correo electrónico y la contraseña son obligatorios');
         }
-        UsuariosService.getBy(email, async (err, data) => {
+        UsuariosRepository.getBy(email, async (err, data) => {
             if (err) {
                 return res.status(500).json({ fecha: new Date().toISOString(), error: err.message });
             }
@@ -75,7 +75,7 @@ class UsuariosController {
         if (!email) {
             return res.status(400).send('El correo electrónico es obligatorio');
         }
-        UsuariosService.update(id, lastnames, names, email, role, (err, data) => {
+        UsuariosRepository.update(id, lastnames, names, email, role, (err, data) => {
             if (err) {
                 return res.status(500).json({ fecha: new Date().toISOString(), error: err.message });
             }
@@ -91,7 +91,7 @@ class UsuariosController {
         if (!id) {
             return res.status(400).send('El id es obligatorio');
         }
-        UsuariosService.delete(id, (err, data) => {
+        UsuariosRepository.delete(id, (err, data) => {
             if (err) {
                 return res.status(500).json({ fecha: new Date().toISOString(), error: err.message });
             }
@@ -107,14 +107,14 @@ class UsuariosController {
         if (!email) {
             return res.status(400).send('El correo electrónico es obligatorio');
         }
-        UsuariosService.getBy(email, async (err, data) => {
+        UsuariosRepository.getBy(email, async (err, data) => {
             if (err) {
                 return res.status(500).json({ fecha: new Date().toISOString(), error: err.message });
             }
             if (data) {
                 return res.status(400).json({ fecha: new Date().toISOString(), error: 'El correo electrónico ya está registrado' });
             }
-            UsuariosService.save(id, lastnames, names, email, null, role, (err, data) => {
+            UsuariosRepository.save(id, lastnames, names, email, null, role, (err, data) => {
                 if (err) {
                     return res.status(500).json({ fecha: new Date().toISOString(), error: err.message });
                 }

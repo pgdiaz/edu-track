@@ -11,7 +11,7 @@ const users = [
     },
 ];
 
-class UsuariosService {
+class UsuariosRepository {
 
     static getAllBy(page, size, callback) {
         const paginatedRows = users.slice(page * size, page * size + size)
@@ -66,8 +66,8 @@ class UsuariosService {
             return callback(null, { affectedRows: 1 })
         }
         callback(null, { affectedRows: 0 })
-    };
+    }
 
 }
 
-export default UsuariosService;
+export default UsuariosRepository;
