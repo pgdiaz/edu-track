@@ -1,8 +1,8 @@
-import { randomId } from "@mui/x-data-grid-generator";
+import crypto from 'node:crypto'
 
 const users = [
     {
-        id: randomId(),
+        id: crypto.randomUUID(),
         lastnames: 'Diaz',
         names: 'Pablo',
         email: 'admin@gmail.com',
@@ -36,7 +36,7 @@ class UsuariosService {
 
     static save(id, lastnames, names, email, password, role, callback) {
         const user = {
-            id: id ?? randomId(),
+            id: id ?? crypto.randomUUID(),
             lastnames: lastnames,
             names: names,
             email: email,
